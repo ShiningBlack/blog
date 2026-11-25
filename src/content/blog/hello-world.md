@@ -1,15 +1,17 @@
 ---
-title: "重建 ShiningBlack 个人博客：零维护 Git-CMS 架构实践"
-description: "使用 Astro + Sveltia CMS + Giscus + Vercel 构建零数据库、零运维成本的个人博客，并实现 /admin 可视化后台在线发帖。"
+title: 重建 ShiningBlack 个人博客：零维护 Git-CMS 架构实践
+description: 使用 Astro + Sveltia CMS + Giscus + Vercel 构建零数据库、零运维成本的个人博客，并实现 /admin 可视化后台在线发帖。
 pubDate: 2026-11-25 10:00:00
-category: "工程实践"
+updatedDate: ''
+category: 工程实践
 tags:
   - Astro
   - Vercel
   - Sveltia CMS
   - 博客折腾
+cover: ''
 pinned: true
-draft: false
+draft: true
 ---
 
 欢迎来到全新重建的 **ShiningBlack** 个人博客！
