@@ -2,18 +2,39 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
+const optionalDate = z.preprocess(
+  (val) => (val === '' || val === null || val === undefined ? undefined : val),
+  z.coerce.date().optional(),
+);
+
+const optionalString = z.preprocess(
+  (val) => (val === '' || val === null || val === undefined ? undefined : val),
+  z.string().optional(),
+);
+
+const stringArray = z.preprocess(
+  (val) => (Array.isArray(val) ? val.filter(Boolean) : []),
+  z.array(z.string()),
+);
+
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
   schema: z.object({
     title: z.string(),
-    description: z.string(),
+    description: z.preprocess(
+      (val) => (val === null || val === undefined ? '' : val),
+      z.string(),
+    ),
     pubDate: z.coerce.date(),
-    updatedDate: z.coerce.date().optional(),
-    category: z.string().default('技术笔记'),
-    tags: z.array(z.string()).default([]),
-    cover: z.string().optional(),
-    pinned: z.boolean().default(false),
-    draft: z.boolean().default(false),
+    updatedDate: optionalDate,
+    category: z.preprocess(
+      (val) => (val === '' || val === null || val === undefined ? '技术笔记' : val),
+      z.string(),
+    ),
+    tags: stringArray,
+    cover: optionalString,
+    pinned: z.preprocess((val) => Boolean(val), z.boolean()).default(false),
+    draft: z.preprocess((val) => Boolean(val), z.boolean()).default(false),
   }),
 });
 
@@ -22,11 +43,11 @@ const projects = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    url: z.string().optional(),
-    repo: z.string().optional(),
-    tech: z.array(z.string()).default([]),
-    featured: z.boolean().default(true),
-    order: z.number().int().default(10),
+    url: optionalString,
+    repo: optionalString,
+    tech: stringArray,
+    featured: z.preprocess((val) => (val === undefined ? true : Boolean(val)), z.boolean()),
+    order: z.coerce.number().int().default(10),
   }),
 });
 
@@ -34,7 +55,7 @@ const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
   schema: z.object({
     title: z.string(),
-    description: z.string().optional(),
+    description: optionalString,
   }),
 });
 
