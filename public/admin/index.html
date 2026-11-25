@@ -8,6 +8,62 @@
     <title>内容管理后台 | ShiningBlack Blog</title>
   </head>
   <body>
+    <script>
+      (function () {
+        var origOpen = window.open.bind(window);
+        var activeBridge = null;
+        var activeChannel = null;
+
+        function cleanup() {
+          if (activeChannel) {
+            try {
+              activeChannel.close();
+            } catch (_) {}
+            activeChannel = null;
+          }
+          if (activeBridge && activeBridge.parentNode) {
+            activeBridge.parentNode.removeChild(activeBridge);
+            activeBridge = null;
+          }
+        }
+
+        window.open = function (url, target, features) {
+          if (typeof url !== 'string' || url.indexOf('/api/auth') === -1) {
+            return origOpen(url, target, features);
+          }
+
+          cleanup();
+
+          var popup = origOpen(url, target, features);
+          if (!popup) return null;
+
+          var iframe = document.createElement('iframe');
+          iframe.style.display = 'none';
+          iframe.src = 'about:blank';
+          document.body.appendChild(iframe);
+          activeBridge = iframe;
+
+          var bridgeWin = iframe.contentWindow;
+          var channel = new BroadcastChannel('sveltia-oauth-bridge');
+          activeChannel = channel;
+
+          channel.onmessage = function (ev) {
+            var data = ev.data;
+            if (typeof data !== 'string' || data.indexOf('authorization:github:') !== 0) return;
+            window.dispatchEvent(
+              new MessageEvent('message', {
+                data: data,
+                origin: window.location.origin,
+                source: bridgeWin,
+              }),
+            );
+            setTimeout(cleanup, 100);
+          };
+
+          return bridgeWin;
+        };
+      })();
+    </script>
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
   </body>
 </html>

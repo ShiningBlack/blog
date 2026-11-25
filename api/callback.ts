@@ -31,30 +31,38 @@ function renderAuthScript(status: 'success' | 'error', payload: Record<string, u
         var payload = ${safeJson};
         var msg = ${JSON.stringify(messagePrefix)} + JSON.stringify(payload);
         var targetOrigin = window.location.origin;
+        var delivered = false;
 
-        if (!window.opener) {
+        try {
+          if (typeof BroadcastChannel !== 'undefined') {
+            var channel = new BroadcastChannel('sveltia-oauth-bridge');
+            channel.postMessage(msg);
+            delivered = true;
+            setTimeout(function () {
+              try {
+                channel.close();
+              } catch (_) {}
+            }, 300);
+          }
+        } catch (_) {}
+
+        if (window.opener) {
+          try {
+            window.opener.postMessage(msg, targetOrigin);
+            delivered = true;
+          } catch (_) {}
+        }
+
+        if (delivered) {
+          setTimeout(function () {
+            window.close();
+          }, 350);
+        } else {
           var el = document.getElementById('status-msg');
           if (el) {
             el.textContent = '未检测到后台父窗口（可能被浏览器弹窗拦截或隐私策略阻断），请关闭此页面并在原页面重试。';
           }
-          return;
         }
-
-        function receiveMessage(e) {
-          if (e.source !== window.opener || e.origin !== targetOrigin) return;
-          if (e.data === 'authorizing:github') {
-            window.opener.postMessage(msg, targetOrigin);
-            window.removeEventListener('message', receiveMessage, false);
-          }
-        }
-
-        window.addEventListener('message', receiveMessage, false);
-        window.opener.postMessage(msg, targetOrigin);
-        window.opener.postMessage('authorizing:github', targetOrigin);
-
-        setTimeout(function () {
-          window.close();
-        }, 1500);
       })();
     </script>
   </body>
