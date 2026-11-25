@@ -9,20 +9,20 @@ const tags = collectTags(posts);
 ---
 
 <BaseLayout title={`标签 | ${SITE.title}`} description="按标签浏览所有文章">
-  <header class="mb-10">
-    <h1 class="text-xl font-semibold tracking-tight text-[var(--text)]">标签</h1>
-    <p class="mt-1.5 text-sm text-[var(--text-subtle)]">共 {tags.length} 个标签</p>
+  <header class="mb-10 pb-6 border-b border-[var(--border)]">
+    <h1 class="text-3xl font-extrabold tracking-tight text-[var(--text)]">标签</h1>
+    <p class="font-editorial mt-2 text-lg text-[var(--text-muted)]">共 {tags.length} 个标签</p>
   </header>
 
-  <div class="flex flex-wrap gap-x-5 gap-y-3 text-sm">
+  <div class="flex flex-wrap gap-x-6 gap-y-4 text-lg">
     {
       tags.map(({ tag, count }) => (
         <a
           href={`/tags/${encodeURIComponent(tag)}/`}
-          class="text-[var(--text-muted)] hover:text-[var(--text)] hover:underline underline-offset-4 decoration-[var(--text-subtle)] transition-colors"
+          class="font-semibold text-[var(--accent)] hover:text-[var(--accent-warm)] hover:underline underline-offset-4 decoration-2 transition-colors"
         >
           #{tag}
-          <span class="ml-1 font-mono text-xs text-[var(--text-subtle)]">{count}</span>
+          <span class="ml-1 font-mono text-sm font-normal text-[var(--text-subtle)]">{count}</span>
         </a>
       ))
     }

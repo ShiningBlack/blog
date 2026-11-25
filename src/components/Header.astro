@@ -6,17 +6,17 @@ import ThemeToggle from './ThemeToggle.astro';
 const pathname = Astro.url.pathname;
 ---
 
-<header class="mx-auto w-full max-w-2xl px-5 pt-8 sm:px-6 sm:pt-10">
+<header class="mx-auto w-full max-w-[44rem] px-5 pt-8 sm:px-7 sm:pt-10">
   <div class="flex items-center justify-between border-b border-[var(--border)] pb-5">
     <a
       href="/"
-      class="text-base font-semibold tracking-tight text-[var(--text)] hover:opacity-75 transition-opacity"
+      class="text-lg font-extrabold tracking-tight text-[var(--text)] hover:text-[var(--accent)] transition-colors"
     >
       {SITE.title}
     </a>
 
-    <div class="flex items-center gap-5">
-      <nav class="hidden sm:flex items-center gap-5 text-sm">
+    <div class="flex items-center gap-6">
+      <nav class="hidden sm:flex items-center gap-6 text-[0.95rem]">
         {
           SITE.nav
             .filter((item) => item.href !== '/')
@@ -27,7 +27,7 @@ const pathname = Astro.url.pathname;
                   href={item.href}
                   class={`transition-colors ${
                     isActive
-                      ? 'text-[var(--text)] font-medium'
+                      ? 'font-semibold text-[var(--accent)] underline underline-offset-8 decoration-2'
                       : 'text-[var(--text-muted)] hover:text-[var(--text)]'
                   }`}
                 >
@@ -38,15 +38,15 @@ const pathname = Astro.url.pathname;
         }
       </nav>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5">
         <button
           type="button"
           id="search-trigger"
           aria-label="站内搜索"
           title="站内搜索 (Ctrl/Cmd + K)"
-          class="inline-flex h-8 w-8 items-center justify-center text-[var(--text-muted)] transition hover:text-[var(--text)] cursor-pointer"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-md text-[var(--text-muted)] transition hover:bg-[var(--bg-muted)] hover:text-[var(--text)] cursor-pointer"
         >
-          <Search class="h-4 w-4" />
+          <Search class="h-[1.1rem] w-[1.1rem]" />
         </button>
 
         <ThemeToggle />
@@ -55,10 +55,10 @@ const pathname = Astro.url.pathname;
           type="button"
           id="mobile-menu-toggle"
           aria-label="展开导航菜单"
-          class="inline-flex sm:hidden h-8 w-8 items-center justify-center text-[var(--text-muted)] hover:text-[var(--text)] cursor-pointer"
+          class="inline-flex sm:hidden h-9 w-9 items-center justify-center rounded-md text-[var(--text-muted)] hover:bg-[var(--bg-muted)] hover:text-[var(--text)] cursor-pointer"
         >
-          <Menu id="mobile-menu-open-icon" class="h-4 w-4" />
-          <X id="mobile-menu-close-icon" class="h-4 w-4 hidden" />
+          <Menu id="mobile-menu-open-icon" class="h-5 w-5" />
+          <X id="mobile-menu-close-icon" class="h-5 w-5 hidden" />
         </button>
       </div>
     </div>
@@ -66,7 +66,7 @@ const pathname = Astro.url.pathname;
 
   <nav
     id="mobile-menu"
-    class="hidden sm:hidden border-b border-[var(--border)] py-3 space-y-2 text-sm"
+    class="hidden sm:hidden border-b border-[var(--border)] py-3 space-y-2 text-base"
   >
     {
       SITE.nav.map((item) => {
@@ -74,8 +74,8 @@ const pathname = Astro.url.pathname;
         return (
           <a
             href={item.href}
-            class={`block py-1 ${
-              isActive ? 'font-medium text-[var(--text)]' : 'text-[var(--text-muted)]'
+            class={`block py-1.5 ${
+              isActive ? 'font-semibold text-[var(--accent)]' : 'text-[var(--text-muted)]'
             }`}
           >
             {item.label}

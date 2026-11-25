@@ -6,7 +6,7 @@ const isConfigured = Boolean(repo && repoId && categoryId);
 ---
 
 <section class="mt-16 border-t border-[var(--border)] pt-10" aria-label="评论区">
-  <h2 class="mb-6 text-sm font-medium text-[var(--text-muted)]">评论</h2>
+  <h2 class="mb-6 text-lg font-extrabold tracking-tight text-[var(--text)]">评论</h2>
 
   {
     isConfigured ? (
@@ -20,7 +20,7 @@ const isConfigured = Boolean(repo && repoId && categoryId);
         data-lang={lang}
       />
     ) : (
-      <p class="text-sm text-[var(--text-muted)]">
+      <p class="font-editorial text-base text-[var(--text-muted)]">
         Giscus 评论尚未配置仓库 ID，请在 <code>src/config/site.ts</code> 或 Vercel 环境变量中补充。
       </p>
     )

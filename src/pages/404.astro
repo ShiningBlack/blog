@@ -5,12 +5,14 @@ import { SITE } from '../config/site';
 
 <BaseLayout title={`404 | ${SITE.title}`} noindex={true}>
   <div class="py-16">
-    <p class="font-mono text-sm text-[var(--text-subtle)]">404</p>
-    <h1 class="mt-2 text-xl font-semibold text-[var(--text)]">页面未找到</h1>
-    <p class="mt-2 text-sm text-[var(--text-muted)]">你访问的页面可能已被移动或删除。</p>
+    <p class="font-mono text-base font-bold text-[var(--accent-warm)]">404</p>
+    <h1 class="mt-2 text-3xl font-extrabold text-[var(--text)]">页面未找到</h1>
+    <p class="font-editorial mt-3 text-lg text-[var(--text-muted)]">
+      你访问的页面可能已被移动或删除。
+    </p>
     <a
       href="/"
-      class="mt-6 inline-block text-sm text-[var(--text)] underline underline-offset-4 decoration-[var(--text-subtle)] hover:decoration-[var(--text)]"
+      class="mt-6 inline-block text-base font-semibold text-[var(--accent)] underline underline-offset-4 decoration-2 hover:text-[var(--accent-warm)]"
     >
       ← 返回首页
     </a>

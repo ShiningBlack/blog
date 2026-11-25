@@ -9,29 +9,29 @@ const grouped = groupPostsByYear(posts);
 ---
 
 <BaseLayout title={`归档 | ${SITE.title}`} description="按年份浏览所有博客文章">
-  <header class="mb-10">
-    <h1 class="text-xl font-semibold tracking-tight text-[var(--text)]">归档</h1>
-    <p class="mt-1.5 text-sm text-[var(--text-subtle)]">共 {posts.length} 篇文章</p>
+  <header class="mb-10 pb-6 border-b border-[var(--border)]">
+    <h1 class="text-3xl font-extrabold tracking-tight text-[var(--text)]">归档</h1>
+    <p class="font-editorial mt-2 text-lg text-[var(--text-muted)]">共 {posts.length} 篇文章</p>
   </header>
 
   {
     grouped.length > 0 ? (
-      <div class="space-y-10">
+      <div class="space-y-12">
         {grouped.map(({ year, posts: yearPosts }) => (
           <section>
-            <h2 class="mb-3 font-mono text-xs font-medium text-[var(--text-subtle)]">{year}</h2>
-            <ul class="space-y-3">
+            <h2 class="mb-4 font-mono text-sm font-bold text-[var(--accent-warm)]">{year}</h2>
+            <ul class="space-y-4">
               {yearPosts.map((post) => (
                 <li class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                   <a
                     href={`/blog/${post.id}/`}
-                    class="text-[0.95rem] text-[var(--text)] hover:underline underline-offset-4 decoration-[var(--text-subtle)]"
+                    class="text-lg font-bold text-[var(--text)] hover:text-[var(--accent)] hover:underline underline-offset-4 decoration-2 transition-colors"
                   >
                     {post.data.title}
                   </a>
                   <time
                     datetime={post.data.pubDate.toISOString()}
-                    class="shrink-0 font-mono text-xs text-[var(--text-subtle)] tabular-nums"
+                    class="shrink-0 font-mono text-sm text-[var(--text-subtle)] tabular-nums"
                   >
                     {formatDate(post.data.pubDate)}
                   </time>
@@ -42,7 +42,7 @@ const grouped = groupPostsByYear(posts);
         ))}
       </div>
     ) : (
-      <p class="text-sm text-[var(--text-muted)]">暂无已发布文章。</p>
+      <p class="font-editorial text-lg text-[var(--text-muted)]">暂无已发布文章。</p>
     )
   }
 </BaseLayout>

@@ -15,20 +15,23 @@ const projects = (await getCollection('projects'))
 ---
 
 <BaseLayout>
-  <section class="pb-10">
-    <p class="text-sm leading-relaxed text-[var(--text-muted)]">
+  <section class="pb-12 border-b border-[var(--border)]">
+    <h1 class="text-3xl sm:text-[2.25rem] font-extrabold tracking-tight text-[var(--text)] leading-tight">
+      {SITE.title}
+    </h1>
+    <p class="font-editorial mt-4 text-lg sm:text-[1.2rem] leading-relaxed text-[var(--text-muted)]">
       {SITE.description}
     </p>
   </section>
 
-  <section>
+  <section class="mt-12">
     <div class="mb-4 flex items-baseline justify-between">
-      <h1 class="text-xs font-medium tracking-wider text-[var(--text-subtle)] uppercase">文章</h1>
+      <h2 class="text-sm font-bold tracking-wide text-[var(--text-subtle)] uppercase">最新文章</h2>
       {
         allPosts.length > recentPosts.length && (
           <a
             href="/archives"
-            class="text-xs text-[var(--text-subtle)] hover:text-[var(--text)] transition-colors"
+            class="text-sm font-medium text-[var(--accent)] underline underline-offset-4 decoration-2 hover:text-[var(--accent-warm)] transition-colors"
           >
             全部 {allPosts.length} 篇 →
           </a>
@@ -44,8 +47,15 @@ const projects = (await getCollection('projects'))
           ))}
         </div>
       ) : (
-        <p class="text-sm text-[var(--text-muted)]">
-          暂无文章，前往 <a href="/admin/" class="underline underline-offset-4">后台</a> 发布第一篇。
+        <p class="font-editorial py-4 text-lg text-[var(--text-muted)]">
+          暂无已发布文章，前往
+          <a
+            href="/admin/"
+            class="mx-1 font-semibold text-[var(--accent)] underline underline-offset-4 decoration-2"
+          >
+            写作后台
+          </a>
+          发布第一篇吧。
         </p>
       )
     }
@@ -53,18 +63,20 @@ const projects = (await getCollection('projects'))
 
   {
     projects.length > 0 && (
-      <section class="mt-14 pt-10 border-t border-[var(--border)]">
-        <div class="mb-4 flex items-baseline justify-between">
-          <h2 class="text-xs font-medium tracking-wider text-[var(--text-subtle)] uppercase">项目</h2>
+      <section class="mt-14 pt-12 border-t border-[var(--border)]">
+        <div class="mb-6 flex items-baseline justify-between">
+          <h2 class="text-sm font-bold tracking-wide text-[var(--text-subtle)] uppercase">
+            精选项目
+          </h2>
           <a
             href="/projects"
-            class="text-xs text-[var(--text-subtle)] hover:text-[var(--text)] transition-colors"
+            class="text-sm font-medium text-[var(--accent)] underline underline-offset-4 decoration-2 hover:text-[var(--accent-warm)] transition-colors"
           >
-            全部 →
+            全部项目 →
           </a>
         </div>
 
-        <ul class="space-y-4">
+        <ul class="space-y-6">
           {projects.map((project) => (
             <li>
               <div class="flex items-baseline justify-between gap-4">
@@ -72,7 +84,7 @@ const projects = (await getCollection('projects'))
                   href={project.data.url || project.data.repo || '/projects'}
                   target={project.data.url || project.data.repo ? '_blank' : undefined}
                   rel={project.data.url || project.data.repo ? 'noopener noreferrer' : undefined}
-                  class="text-sm font-medium text-[var(--text)] hover:underline underline-offset-4 decoration-[var(--text-subtle)]"
+                  class="text-lg font-bold text-[var(--text)] hover:text-[var(--accent)] hover:underline underline-offset-4 decoration-2 transition-colors"
                 >
                   {project.data.title}
                 </a>
@@ -81,13 +93,15 @@ const projects = (await getCollection('projects'))
                     href={project.data.repo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="shrink-0 text-xs text-[var(--text-subtle)] hover:text-[var(--text)] transition-colors"
+                    class="shrink-0 text-sm font-medium text-[var(--accent-warm)] hover:underline underline-offset-4"
                   >
                     GitHub ↗
                   </a>
                 )}
               </div>
-              <p class="mt-1 text-sm text-[var(--text-muted)]">{project.data.description}</p>
+              <p class="font-editorial mt-1.5 text-[1.05rem] leading-relaxed text-[var(--text-muted)]">
+                {project.data.description}
+              </p>
             </li>
           ))}
         </ul>

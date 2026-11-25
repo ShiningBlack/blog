@@ -1,35 +1,42 @@
 ---
-import { formatDate, type BlogPost } from '../utils/blog';
+import { formatDate, getReadingStats, type BlogPost } from '../utils/blog';
 
 interface Props {
   post: BlogPost;
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, pinned, draft } = post.data;
+const { title, description, pubDate, category, pinned, draft } = post.data;
+const stats = getReadingStats(post.body);
 ---
 
-<article class="group py-4 first:pt-0">
-  <a href={`/blog/${post.id}/`} class="block">
-    <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-      <h2 class="text-base font-medium text-[var(--text)] group-hover:underline underline-offset-4 decoration-[var(--text-subtle)]">
-        {pinned && <span class="mr-1.5 text-xs text-[var(--text-subtle)]">[置顶]</span>}
-        {draft && <span class="mr-1.5 text-xs text-[var(--text-subtle)]">[草稿]</span>}
-        {title}
-      </h2>
-      <time
-        datetime={pubDate.toISOString()}
-        class="shrink-0 font-mono text-xs text-[var(--text-subtle)] tabular-nums"
-      >
-        {formatDate(pubDate)}
-      </time>
-    </div>
-    {
-      description && (
-        <p class="mt-1.5 text-sm leading-relaxed text-[var(--text-muted)] line-clamp-2">
-          {description}
-        </p>
-      )
-    }
-  </a>
+<article class="group py-7 first:pt-2">
+  <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm text-[var(--text-subtle)]">
+    <time datetime={pubDate.toISOString()} class="font-mono tabular-nums">
+      {formatDate(pubDate)}
+    </time>
+    <span>·</span>
+    <span class="font-medium text-[var(--accent-warm)]">{category}</span>
+    <span>·</span>
+    <span>{stats.minutes} 分钟阅读</span>
+    {pinned && <span class="font-medium text-[var(--accent)]">· 置顶</span>}
+    {draft && <span class="font-medium text-[var(--accent-warm)]">· 草稿</span>}
+  </div>
+
+  <h2 class="mt-2 text-xl sm:text-[1.45rem] font-extrabold tracking-tight text-[var(--text)] leading-snug">
+    <a
+      href={`/blog/${post.id}/`}
+      class="group-hover:text-[var(--accent)] group-hover:underline underline-offset-4 decoration-2 transition-colors"
+    >
+      {title}
+    </a>
+  </h2>
+
+  {
+    description && (
+      <p class="font-editorial mt-2.5 text-[1.05rem] sm:text-[1.1rem] leading-relaxed text-[var(--text-muted)] line-clamp-2">
+        {description}
+      </p>
+    )
+  }
 </article>
