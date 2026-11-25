@@ -35,15 +35,11 @@
 
 > 提示：在未配置 OAuth App 前，也可以在 `/admin/` 页面直接使用 GitHub Personal Access Token 或 Chrome 本地文件夹模式编辑文章。
 
-### 3. 开启 Giscus 评论系统
+### 3. 授权 Giscus 评论应用
 
-1. 在 GitHub `ShiningBlack/blog` 仓库进入 **Settings -> Features**，勾选开启 **Discussions**。
-2. 安装 [Giscus GitHub App](https://github.com/apps/giscus) 并授权访问 `ShiningBlack/blog`。
-3. 打开 [giscus.app/zh-CN](https://giscus.app/zh-CN)，输入仓库 `ShiningBlack/blog`，选择 Mapping 为 `pathname`、Category 为 `Announcements`。
-4. 将页面生成的 `data-repo-id` 与 `data-category-id` 添加到 Vercel 环境变量（推荐，改完 Redeploy 即生效）：
-   - `PUBLIC_GISCUS_REPO_ID`
-   - `PUBLIC_GISCUS_CATEGORY_ID`
-   （或直接写入 `src/config/site.ts` 并提交推送）。
+仓库 `ShiningBlack/blog` 已自动开启 **Discussions**，且 `repoId` 与 `Announcements` 分类 ID 已预配置在 [src/config/site.ts](src/config/site.ts) 中。
+
+只需安装 [Giscus GitHub App](https://github.com/apps/giscus) 并授权访问 `ShiningBlack/blog` 仓库即可直接启用评论。
 
 ---
 

@@ -16,9 +16,9 @@ export const SITE = {
   ],
   giscus: {
     repo: 'ShiningBlack/blog' as `${string}/${string}`,
-    repoId: import.meta.env.PUBLIC_GISCUS_REPO_ID || '',
+    repoId: import.meta.env.PUBLIC_GISCUS_REPO_ID || 'R_kgDOV6-ywg',
     category: 'Announcements',
-    categoryId: import.meta.env.PUBLIC_GISCUS_CATEGORY_ID || '',
+    categoryId: import.meta.env.PUBLIC_GISCUS_CATEGORY_ID || 'DIC_kwDOV6-yws4DL6a2',
     mapping: 'pathname',
     lang: 'zh-CN',
   },
