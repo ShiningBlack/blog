@@ -11,7 +11,7 @@ tags:
   - 博客折腾
 cover: ''
 pinned: true
-draft: true
+draft: false
 ---
 
 欢迎来到全新重建的 **ShiningBlack** 个人博客！
