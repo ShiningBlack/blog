@@ -11,20 +11,15 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
 {
   tocHeadings.length > 0 && (
-    <aside class="hidden xl:block">
-      <nav
-        aria-label="文章目录"
-        class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-xs"
-      >
-        <p class="mb-2.5 font-semibold uppercase tracking-wider text-[var(--text-subtle)]">
-          目录
-        </p>
-        <ul class="space-y-1.5">
+    <aside class="hidden xl:block fixed top-28 left-[calc(50%+23.5rem)] w-48">
+      <nav aria-label="文章目录" class="max-h-[calc(100vh-10rem)] overflow-y-auto text-xs">
+        <p class="mb-2.5 text-[11px] font-medium text-[var(--text-subtle)]">目录</p>
+        <ul class="space-y-1.5 border-l border-[var(--border)] pl-3">
           {tocHeadings.map((heading) => (
-            <li class={heading.depth === 3 ? 'pl-3' : ''}>
+            <li class={heading.depth === 3 ? 'pl-2.5' : ''}>
               <a
                 href={`#${heading.slug}`}
-                class="toc-link block truncate text-[var(--text-muted)] transition hover:text-[var(--accent)]"
+                class="toc-link block truncate text-[var(--text-subtle)] transition hover:text-[var(--text)]"
                 data-slug={heading.slug}
               >
                 {heading.text}
@@ -58,8 +53,9 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
             const id = entry.target.id;
             for (const link of links) {
               const active = link.getAttribute('data-slug') === id;
-              link.classList.toggle('text-[var(--accent)]', active);
+              link.classList.toggle('text-[var(--text)]', active);
               link.classList.toggle('font-medium', active);
+              link.classList.toggle('text-[var(--text-subtle)]', !active);
             }
           }
         }

@@ -1,143 +1,96 @@
 ---
 import { getCollection } from 'astro:content';
-import { ArrowRight, ExternalLink, Github, Sparkles } from 'lucide-astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { SITE } from '../config/site';
 import { isPublished, sortPosts } from '../utils/blog';
 
 const allPosts = sortPosts(await getCollection('blog', isPublished));
-const recentPosts = allPosts.slice(0, 6);
+const recentPosts = allPosts.slice(0, 10);
 
 const projects = (await getCollection('projects'))
   .filter((p) => p.data.featured)
   .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 4);
+  .slice(0, 5);
 ---
 
 <BaseLayout>
-  <section class="pb-10 border-b border-[var(--border)]">
-    <div
-      class="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--bg-muted)] px-3 py-1 text-xs text-[var(--text-muted)]"
-    >
-      <Sparkles class="h-3.5 w-3.5 text-[var(--accent)]" />
-      <span>{SITE.subtitle}</span>
-    </div>
-
-    <h1 class="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--text)]">
-      你好，我是 {SITE.author}
-    </h1>
-
-    <p class="mt-3 max-w-2xl text-base leading-relaxed text-[var(--text-muted)]">
+  <section class="pb-10">
+    <p class="text-sm leading-relaxed text-[var(--text-muted)]">
       {SITE.description}
     </p>
-
-    <div class="mt-6 flex flex-wrap items-center gap-3 text-sm">
-      <a
-        href="/archives"
-        class="inline-flex items-center gap-1.5 rounded-xl bg-[var(--text)] px-4 py-2 font-medium text-[var(--bg)] transition hover:opacity-85"
-      >
-        阅读全部文章
-        <ArrowRight class="h-4 w-4" />
-      </a>
-      <a
-        href={SITE.github}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] px-4 py-2 font-medium text-[var(--text)] transition hover:border-[var(--accent)]"
-      >
-        <Github class="h-4 w-4" />
-        GitHub
-      </a>
-    </div>
   </section>
 
-  <section class="mt-10">
-    <div class="mb-5 flex items-center justify-between">
-      <h2 class="text-xl font-bold tracking-tight text-[var(--text)]">最新文章</h2>
-      <a
-        href="/archives"
-        class="inline-flex items-center gap-1 text-sm text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors"
-      >
-        全部 {allPosts.length} 篇
-        <ArrowRight class="h-3.5 w-3.5" />
-      </a>
+  <section>
+    <div class="mb-4 flex items-baseline justify-between">
+      <h1 class="text-xs font-medium tracking-wider text-[var(--text-subtle)] uppercase">文章</h1>
+      {
+        allPosts.length > recentPosts.length && (
+          <a
+            href="/archives"
+            class="text-xs text-[var(--text-subtle)] hover:text-[var(--text)] transition-colors"
+          >
+            全部 {allPosts.length} 篇 →
+          </a>
+        )
+      }
     </div>
 
     {
       recentPosts.length > 0 ? (
-        <div class="space-y-4">
+        <div class="divide-y divide-[var(--border)]">
           {recentPosts.map((post) => (
             <PostCard post={post} />
           ))}
         </div>
       ) : (
-        <div class="rounded-2xl border border-dashed border-[var(--border)] p-8 text-center text-sm text-[var(--text-muted)]">
-          暂无文章，前往 <a href="/admin/" class="text-[var(--accent)] underline">/admin</a> 发布第一篇文章吧。
-        </div>
+        <p class="text-sm text-[var(--text-muted)]">
+          暂无文章，前往 <a href="/admin/" class="underline underline-offset-4">后台</a> 发布第一篇。
+        </p>
       )
     }
   </section>
 
   {
     projects.length > 0 && (
-      <section class="mt-14">
-        <div class="mb-5 flex items-center justify-between">
-          <h2 class="text-xl font-bold tracking-tight text-[var(--text)]">精选项目</h2>
+      <section class="mt-14 pt-10 border-t border-[var(--border)]">
+        <div class="mb-4 flex items-baseline justify-between">
+          <h2 class="text-xs font-medium tracking-wider text-[var(--text-subtle)] uppercase">项目</h2>
           <a
             href="/projects"
-            class="inline-flex items-center gap-1 text-sm text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors"
+            class="text-xs text-[var(--text-subtle)] hover:text-[var(--text)] transition-colors"
           >
-            查看全部
-            <ArrowRight class="h-3.5 w-3.5" />
+            全部 →
           </a>
         </div>
 
-        <div class="grid gap-4 sm:grid-cols-2">
+        <ul class="space-y-4">
           {projects.map((project) => (
-            <div class="flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-5 transition hover:border-[var(--accent)]">
-              <div>
-                <div class="flex items-start justify-between gap-2">
-                  <h3 class="font-semibold text-[var(--text)]">{project.data.title}</h3>
-                  <div class="flex items-center gap-2 text-[var(--text-muted)]">
-                    {project.data.repo && (
-                      <a
-                        href={project.data.repo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`${project.data.title} GitHub`}
-                        class="hover:text-[var(--accent)]"
-                      >
-                        <Github class="h-4 w-4" />
-                      </a>
-                    )}
-                    {project.data.url && (
-                      <a
-                        href={project.data.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`${project.data.title} 链接`}
-                        class="hover:text-[var(--accent)]"
-                      >
-                        <ExternalLink class="h-4 w-4" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-                <p class="mt-2 text-sm text-[var(--text-muted)]">{project.data.description}</p>
+            <li>
+              <div class="flex items-baseline justify-between gap-4">
+                <a
+                  href={project.data.url || project.data.repo || '/projects'}
+                  target={project.data.url || project.data.repo ? '_blank' : undefined}
+                  rel={project.data.url || project.data.repo ? 'noopener noreferrer' : undefined}
+                  class="text-sm font-medium text-[var(--text)] hover:underline underline-offset-4 decoration-[var(--text-subtle)]"
+                >
+                  {project.data.title}
+                </a>
+                {project.data.repo && (
+                  <a
+                    href={project.data.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="shrink-0 text-xs text-[var(--text-subtle)] hover:text-[var(--text)] transition-colors"
+                  >
+                    GitHub ↗
+                  </a>
+                )}
               </div>
-              {project.data.tech.length > 0 && (
-                <div class="mt-4 flex flex-wrap gap-1.5">
-                  {project.data.tech.map((t) => (
-                    <span class="rounded-md bg-[var(--bg-muted)] px-2 py-0.5 text-xs text-[var(--text-muted)]">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
+              <p class="mt-1 text-sm text-[var(--text-muted)]">{project.data.description}</p>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
     )
   }

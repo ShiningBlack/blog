@@ -1,17 +1,14 @@
 ---
-import { Rss } from 'lucide-astro';
 import { SITE } from '../config/site';
 
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-auto border-t border-[var(--border)] bg-[var(--bg-muted)]/40">
+<footer class="mx-auto mt-auto w-full max-w-2xl px-5 pb-10 pt-6 sm:px-6">
   <div
-    class="mx-auto flex max-w-4xl flex-col sm:flex-row items-center justify-between gap-4 px-4 py-8 text-xs text-[var(--text-muted)] sm:px-6"
+    class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-[var(--border)] pt-6 text-xs text-[var(--text-subtle)]"
   >
-    <p>
-      © {year} {SITE.author}. Built with Astro &amp; hosted on Vercel.
-    </p>
+    <p>© {year} {SITE.author}</p>
     <div class="flex items-center gap-4">
       <a
         href={SITE.github}
@@ -21,11 +18,11 @@ const year = new Date().getFullYear();
       >
         GitHub
       </a>
-      <a href="/rss.xml" class="inline-flex items-center gap-1 hover:text-[var(--text)] transition-colors">
-        <Rss class="h-3.5 w-3.5" /> RSS
+      <a href="/rss.xml" class="hover:text-[var(--text)] transition-colors">
+        RSS
       </a>
       <a href="/admin/" class="hover:text-[var(--text)] transition-colors">
-        后台管理
+        写文章
       </a>
     </div>
   </div>

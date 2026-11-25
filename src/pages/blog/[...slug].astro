@@ -1,6 +1,5 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { ArrowLeft, ArrowRight, Calendar, Clock, Folder } from 'lucide-astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TOC from '../../components/TOC.astro';
 import Comments from '../../components/Comments.astro';
@@ -26,116 +25,84 @@ const { title, description, pubDate, updatedDate, category, tags = [], cover } =
 ---
 
 <BaseLayout title={`${title} | ${SITE.title}`} description={description} image={cover} type="article">
-  <div class="relative xl:grid xl:grid-cols-[minmax(0,1fr)_14rem] xl:gap-10">
-    <article data-pagefind-body class="min-w-0">
-      <header class="mb-8 border-b border-[var(--border)] pb-6">
-        <a
-          href="/archives"
-          class="inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors"
-        >
-          <ArrowLeft class="h-3.5 w-3.5" /> 返回文章归档
-        </a>
+  <article data-pagefind-body>
+    <header class="mb-10">
+      <h1 class="text-2xl sm:text-[1.75rem] font-semibold tracking-tight text-[var(--text)] leading-snug">
+        {title}
+      </h1>
 
-        <h1 class="mt-4 text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text)] leading-snug">
-          {title}
-        </h1>
-
-        <p class="mt-3 text-sm sm:text-base text-[var(--text-muted)]">{description}</p>
-
-        <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[var(--text-subtle)]">
-          <span class="inline-flex items-center gap-1">
-            <Calendar class="h-3.5 w-3.5" />
-            <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
-          </span>
-          {
-            updatedDate && (
-              <span>更新于 {formatDate(updatedDate)}</span>
-            )
-          }
-          <span class="inline-flex items-center gap-1">
-            <Folder class="h-3.5 w-3.5" />
-            {category}
-          </span>
-          <span class="inline-flex items-center gap-1">
-            <Clock class="h-3.5 w-3.5" />
-            约 {stats.words} 字 · {stats.minutes} 分钟
-          </span>
-        </div>
-
-        {
-          tags.length > 0 && (
-            <div class="mt-4 flex flex-wrap gap-1.5">
-              {tags.map((tag) => (
-                <a
-                  href={`/tags/${encodeURIComponent(tag)}/`}
-                  class="rounded-md border border-[var(--border)] bg-[var(--bg-muted)] px-2 py-0.5 text-xs text-[var(--text-muted)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
-                >
-                  # {tag}
-                </a>
-              ))}
-            </div>
-          )
-        }
-
-        {
-          cover && (
-            <img
-              src={cover}
-              alt={title}
-              class="mt-6 max-h-96 w-full rounded-2xl border border-[var(--border)] object-cover"
-            />
-          )
-        }
-      </header>
-
-      <div class="prose">
-        <Content />
+      <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--text-subtle)]">
+        <time datetime={pubDate.toISOString()} class="font-mono tabular-nums">
+          {formatDate(pubDate)}
+        </time>
+        {updatedDate && <span class="font-mono">更新于 {formatDate(updatedDate)}</span>}
+        <span>·</span>
+        <span>{category}</span>
+        <span>·</span>
+        <span>约 {stats.words} 字，{stats.minutes} 分钟</span>
       </div>
-    </article>
 
-    <TOC headings={headings} />
-  </div>
+      {
+        tags.length > 0 && (
+          <div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-[var(--text-subtle)]">
+            {tags.map((tag) => (
+              <a
+                href={`/tags/${encodeURIComponent(tag)}/`}
+                class="hover:text-[var(--text)] transition-colors"
+              >
+                #{tag}
+              </a>
+            ))}
+          </div>
+        )
+      }
 
-  <nav
-    aria-label="上下篇导航"
-    class="mt-12 grid gap-4 border-t border-[var(--border)] pt-8 sm:grid-cols-2"
-  >
-    {
-      prevPost ? (
-        <a
-          href={`/blog/${prevPost.id}/`}
-          class="group rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 transition hover:border-[var(--accent)]"
-        >
-          <span class="inline-flex items-center gap-1 text-xs text-[var(--text-subtle)]">
-            <ArrowLeft class="h-3 w-3" /> 上一篇
-          </span>
-          <p class="mt-1 font-medium text-[var(--text)] group-hover:text-[var(--accent)] line-clamp-1">
-            {prevPost.data.title}
-          </p>
-        </a>
-      ) : (
-        <div />
-      )
-    }
+      {
+        cover && (
+          <img
+            src={cover}
+            alt={title}
+            class="mt-8 max-h-96 w-full rounded object-cover"
+          />
+        )
+      }
+    </header>
 
-    {
-      nextPost ? (
-        <a
-          href={`/blog/${nextPost.id}/`}
-          class="group rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-right transition hover:border-[var(--accent)]"
-        >
-          <span class="inline-flex items-center gap-1 text-xs text-[var(--text-subtle)]">
-            下一篇 <ArrowRight class="h-3 w-3" />
-          </span>
-          <p class="mt-1 font-medium text-[var(--text)] group-hover:text-[var(--accent)] line-clamp-1">
-            {nextPost.data.title}
-          </p>
-        </a>
-      ) : (
-        <div />
-      )
-    }
-  </nav>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+
+  <TOC headings={headings} />
+
+  {
+    (prevPost || nextPost) && (
+      <nav
+        aria-label="上下篇导航"
+        class="mt-14 flex flex-col sm:flex-row justify-between gap-4 border-t border-[var(--border)] pt-6 text-sm"
+      >
+        {prevPost ? (
+          <a
+            href={`/blog/${prevPost.id}/`}
+            class="text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+          >
+            ← {prevPost.data.title}
+          </a>
+        ) : (
+          <span />
+        )}
+
+        {nextPost && (
+          <a
+            href={`/blog/${nextPost.id}/`}
+            class="text-right text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+          >
+            {nextPost.data.title} →
+          </a>
+        )}
+      </nav>
+    )
+  }
 
   <Comments />
 </BaseLayout>

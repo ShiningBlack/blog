@@ -5,8 +5,8 @@ const { repo, repoId, category, categoryId, mapping, lang } = SITE.giscus;
 const isConfigured = Boolean(repo && repoId && categoryId);
 ---
 
-<section class="mt-14 border-t border-[var(--border)] pt-10" aria-label="评论区">
-  <h2 class="mb-6 text-lg font-semibold text-[var(--text)]">评论交流</h2>
+<section class="mt-16 border-t border-[var(--border)] pt-10" aria-label="评论区">
+  <h2 class="mb-6 text-sm font-medium text-[var(--text-muted)]">评论</h2>
 
   {
     isConfigured ? (
@@ -20,23 +20,9 @@ const isConfigured = Boolean(repo && repoId && categoryId);
         data-lang={lang}
       />
     ) : (
-      <div class="rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-muted)] p-5 text-sm text-[var(--text-muted)]">
-        <p class="font-medium text-[var(--text)]">Giscus 评论系统已就绪（待完成仓库 ID 绑定）</p>
-        <p class="mt-1.5">
-          请在 GitHub 仓库开启 Discussions 并安装
-          <a
-            href="https://giscus.app/zh-CN"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-[var(--accent)] underline underline-offset-2"
-          >
-            Giscus App
-          </a>
-          后，将获取到的 <code>PUBLIC_GISCUS_REPO_ID</code> 与
-          <code>PUBLIC_GISCUS_CATEGORY_ID</code> 填入 Vercel 环境变量（或写入
-          <code>src/config/site.ts</code>）即可启用评论。
-        </p>
-      </div>
+      <p class="text-sm text-[var(--text-muted)]">
+        Giscus 评论尚未配置仓库 ID，请在 <code>src/config/site.ts</code> 或 Vercel 环境变量中补充。
+      </p>
     )
   }
 </section>

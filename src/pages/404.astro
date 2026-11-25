@@ -3,16 +3,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE } from '../config/site';
 ---
 
-<BaseLayout title={`页面未找到 | ${SITE.title}`} noindex={true}>
-  <div class="py-20 text-center">
-    <p class="text-5xl font-extrabold text-[var(--accent)]">404</p>
-    <h1 class="mt-4 text-2xl font-bold text-[var(--text)]">页面走丢了</h1>
+<BaseLayout title={`404 | ${SITE.title}`} noindex={true}>
+  <div class="py-16">
+    <p class="font-mono text-sm text-[var(--text-subtle)]">404</p>
+    <h1 class="mt-2 text-xl font-semibold text-[var(--text)]">页面未找到</h1>
     <p class="mt-2 text-sm text-[var(--text-muted)]">你访问的页面可能已被移动或删除。</p>
     <a
       href="/"
-      class="mt-6 inline-block rounded-xl bg-[var(--text)] px-5 py-2.5 text-sm font-medium text-[var(--bg)] transition hover:opacity-85"
+      class="mt-6 inline-block text-sm text-[var(--text)] underline underline-offset-4 decoration-[var(--text-subtle)] hover:decoration-[var(--text)]"
     >
-      返回首页
+      ← 返回首页
     </a>
   </div>
 </BaseLayout>
