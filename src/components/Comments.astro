@@ -1,0 +1,84 @@
+---
+import { SITE } from '../config/site';
+
+const { repo, repoId, category, categoryId, mapping, lang } = SITE.giscus;
+const isConfigured = Boolean(repo && repoId && categoryId);
+---
+
+<section class="mt-14 border-t border-[var(--border)] pt-10" aria-label="评论区">
+  <h2 class="mb-6 text-lg font-semibold text-[var(--text)]">评论交流</h2>
+
+  {
+    isConfigured ? (
+      <div
+        id="giscus-container"
+        data-repo={repo}
+        data-repo-id={repoId}
+        data-category={category}
+        data-category-id={categoryId}
+        data-mapping={mapping}
+        data-lang={lang}
+      />
+    ) : (
+      <div class="rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-muted)] p-5 text-sm text-[var(--text-muted)]">
+        <p class="font-medium text-[var(--text)]">Giscus 评论系统已就绪（待完成仓库 ID 绑定）</p>
+        <p class="mt-1.5">
+          请在 GitHub 仓库开启 Discussions 并安装
+          <a
+            href="https://giscus.app/zh-CN"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-[var(--accent)] underline underline-offset-2"
+          >
+            Giscus App
+          </a>
+          后，将获取到的 <code>PUBLIC_GISCUS_REPO_ID</code> 与
+          <code>PUBLIC_GISCUS_CATEGORY_ID</code> 填入 Vercel 环境变量（或写入
+          <code>src/config/site.ts</code>）即可启用评论。
+        </p>
+      </div>
+    )
+  }
+</section>
+
+{
+  isConfigured && (
+    <script is:inline>
+      (function () {
+        const container = document.getElementById('giscus-container');
+        if (!container) return;
+
+        function getTheme() {
+          return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://giscus.app/client.js';
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.setAttribute('data-repo', container.dataset.repo || '');
+        script.setAttribute('data-repo-id', container.dataset.repoId || '');
+        script.setAttribute('data-category', container.dataset.category || 'Announcements');
+        script.setAttribute('data-category-id', container.dataset.categoryId || '');
+        script.setAttribute('data-mapping', container.dataset.mapping || 'pathname');
+        script.setAttribute('data-strict', '0');
+        script.setAttribute('data-reactions-enabled', '1');
+        script.setAttribute('data-emit-metadata', '0');
+        script.setAttribute('data-input-position', 'top');
+        script.setAttribute('data-theme', getTheme());
+        script.setAttribute('data-lang', container.dataset.lang || 'zh-CN');
+        container.appendChild(script);
+
+        window.addEventListener('theme-change', function (event) {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe || !iframe.contentWindow) return;
+          const theme = event.detail && event.detail.theme ? event.detail.theme : getTheme();
+          iframe.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: theme } } },
+            'https://giscus.app',
+          );
+        });
+      })();
+    </script>
+  )
+}

@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../config/site';
+import { collectTags, isPublished } from '../../utils/blog';
+
+const posts = await getCollection('blog', isPublished);
+const tags = collectTags(posts);
+---
+
+<BaseLayout title={`标签 | ${SITE.title}`} description="按标签浏览所有文章">
+  <header class="mb-8 border-b border-[var(--border)] pb-6">
+    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text)]">标签索引</h1>
+    <p class="mt-2 text-sm text-[var(--text-muted)]">共 {tags.length} 个标签。</p>
+  </header>
+
+  <div class="flex flex-wrap gap-3">
+    {
+      tags.map(({ tag, count }) => (
+        <a
+          href={`/tags/${encodeURIComponent(tag)}/`}
+          class="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] px-4 py-2 text-sm text-[var(--text)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+        >
+          <span># {tag}</span>
+          <span class="rounded-md bg-[var(--bg-muted)] px-1.5 py-0.5 text-xs text-[var(--text-subtle)]">
+            {count}
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</BaseLayout>

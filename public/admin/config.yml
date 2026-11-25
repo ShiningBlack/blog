@@ -1,0 +1,68 @@
+backend:
+  name: github
+  repo: ShiningBlack/blog
+  branch: main
+  base_url: https://www.shiningblack.xyz
+  auth_endpoint: api/auth
+
+site_url: https://www.shiningblack.xyz
+display_url: https://www.shiningblack.xyz
+logo_url: /favicon.svg
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+slug:
+  encoding: "unicode"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: "blog"
+    label: "博客文章"
+    label_singular: "文章"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}} ({{pubDate | date('YYYY-MM-DD')}})"
+    sortable_fields: ["pubDate", "title"]
+    fields:
+      - { label: "标题", name: "title", widget: "string", required: true }
+      - { label: "摘要描述", name: "description", widget: "text", required: true }
+      - { label: "发布时间", name: "pubDate", widget: "datetime", format: "YYYY-MM-DD HH:mm:ss", date_format: "YYYY-MM-DD", time_format: "HH:mm:ss", required: true }
+      - { label: "更新时间", name: "updatedDate", widget: "datetime", format: "YYYY-MM-DD HH:mm:ss", date_format: "YYYY-MM-DD", time_format: "HH:mm:ss", required: false }
+      - { label: "分类", name: "category", widget: "select", options: ["技术笔记", "工程实践", "随笔杂谈", "工具分享"], default: "技术笔记", required: true }
+      - { label: "标签", name: "tags", widget: "list", default: ["随笔"], required: false }
+      - { label: "封面图", name: "cover", widget: "image", required: false }
+      - { label: "置顶文章", name: "pinned", widget: "boolean", default: false, required: false }
+      - { label: "草稿 (不公开)", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "正文 (Markdown)", name: "body", widget: "markdown", required: true }
+
+  - name: "projects"
+    label: "项目展示"
+    label_singular: "项目"
+    folder: "src/content/projects"
+    create: true
+    extension: "json"
+    format: "json"
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: "项目名称", name: "title", widget: "string", required: true }
+      - { label: "一句话简介", name: "description", widget: "text", required: true }
+      - { label: "在线地址", name: "url", widget: "string", required: false }
+      - { label: "GitHub 仓库", name: "repo", widget: "string", required: false }
+      - { label: "技术栈标签", name: "tech", widget: "list", default: ["TypeScript"], required: false }
+      - { label: "首页精选", name: "featured", widget: "boolean", default: true, required: false }
+      - { label: "排序权重 (越小越靠前)", name: "order", widget: "number", value_type: "int", default: 10, required: false }
+
+  - name: "pages"
+    label: "独立页面"
+    files:
+      - name: "about"
+        label: "关于我 (About)"
+        file: "src/content/pages/about.md"
+        fields:
+          - { label: "页面标题", name: "title", widget: "string", default: "关于我" }
+          - { label: "页面副标题", name: "description", widget: "string", default: "关于博主与这个站点" }
+          - { label: "正文", name: "body", widget: "markdown" }

@@ -1,0 +1,9 @@
+{
+  "title": "ShiningBlack Blog",
+  "description": "基于 Astro + Sveltia CMS + Giscus + Vercel 构建的零维护成本个人博客与可视化写作系统。",
+  "url": "https://www.shiningblack.xyz",
+  "repo": "https://github.com/ShiningBlack/blog",
+  "tech": ["Astro", "Tailwind CSS", "Sveltia CMS", "Giscus", "Pagefind"],
+  "featured": true,
+  "order": 1
+}

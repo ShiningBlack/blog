@@ -1,0 +1,25 @@
+export const SITE = {
+  title: 'ShiningBlack',
+  subtitle: '代码、思考与技术折腾笔记',
+  description: 'ShiningBlack 的个人技术博客，记录工程实践、全栈开发、系统架构与日常随笔。',
+  url: 'https://www.shiningblack.xyz',
+  author: 'ShiningBlack',
+  email: '2282669851@qq.com',
+  github: 'https://github.com/ShiningBlack',
+  repo: 'ShiningBlack/blog',
+  nav: [
+    { label: '首页', href: '/' },
+    { label: '归档', href: '/archives' },
+    { label: '标签', href: '/tags' },
+    { label: '项目', href: '/projects' },
+    { label: '关于', href: '/about' },
+  ],
+  giscus: {
+    repo: 'ShiningBlack/blog' as `${string}/${string}`,
+    repoId: import.meta.env.PUBLIC_GISCUS_REPO_ID || '',
+    category: 'Announcements',
+    categoryId: import.meta.env.PUBLIC_GISCUS_CATEGORY_ID || '',
+    mapping: 'pathname',
+    lang: 'zh-CN',
+  },
+} as const;

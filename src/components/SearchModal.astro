@@ -1,0 +1,130 @@
+---
+import { Search, X } from 'lucide-astro';
+---
+
+<dialog
+  id="search-dialog"
+  aria-label="站内搜索"
+  class="m-auto w-[min(92vw,38rem)] rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-0 text-[var(--text)] shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-xs"
+>
+  <div class="flex items-center gap-3 border-b border-[var(--border)] px-4 py-3">
+    <Search class="h-4 w-4 shrink-0 text-[var(--text-subtle)]" />
+    <input
+      id="search-input"
+      type="search"
+      placeholder="搜索文章标题、关键词..."
+      autocomplete="off"
+      class="w-full bg-transparent text-sm text-[var(--text)] placeholder:text-[var(--text-subtle)] focus:outline-none"
+    />
+    <button
+      type="button"
+      id="search-close"
+      aria-label="关闭搜索"
+      class="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--text-muted)] hover:bg-[var(--bg-muted)] hover:text-[var(--text)] cursor-pointer"
+    >
+      <X class="h-4 w-4" />
+    </button>
+  </div>
+
+  <div id="search-results" class="max-h-[60vh] overflow-y-auto p-3 text-sm">
+    <p class="px-2 py-6 text-center text-[var(--text-subtle)]">输入关键词开始搜索，按 Esc 关闭</p>
+  </div>
+</dialog>
+
+<script is:inline>
+  (function () {
+    const dialog = document.getElementById('search-dialog');
+    const input = document.getElementById('search-input');
+    const resultsEl = document.getElementById('search-results');
+    const closeBtn = document.getElementById('search-close');
+    const openBtn = document.getElementById('search-trigger');
+    if (!dialog || !input || !resultsEl) return;
+
+    let pagefindPromise = null;
+
+    function loadPagefind() {
+      if (!pagefindPromise) {
+        pagefindPromise = import(/* @vite-ignore */ '/pagefind/pagefind.js')
+          .then(async (pf) => {
+            await pf.init();
+            return pf;
+          })
+          .catch(() => null);
+      }
+      return pagefindPromise;
+    }
+
+    function openSearch() {
+      if (!dialog.open) {
+        dialog.showModal();
+        input.focus();
+        loadPagefind();
+      }
+    }
+
+    function closeSearch() {
+      if (dialog.open) {
+        dialog.close();
+      }
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openSearch);
+    if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+
+    dialog.addEventListener('click', function (e) {
+      if (e.target === dialog) closeSearch();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        dialog.open ? closeSearch() : openSearch();
+      }
+    });
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    input.addEventListener('input', async function () {
+      const query = input.value.trim();
+      if (!query) {
+        resultsEl.innerHTML =
+          '<p class="px-2 py-6 text-center text-[var(--text-subtle)]">输入关键词开始搜索，按 Esc 关闭</p>';
+        return;
+      }
+
+      const pf = await loadPagefind();
+      if (!pf) {
+        resultsEl.innerHTML =
+          '<p class="px-2 py-6 text-center text-[var(--text-subtle)]">搜索索引仅在生产构建（npm run build）后生效</p>';
+        return;
+      }
+
+      const res = await pf.debouncedSearch(query, {}, 180);
+      if (!res || !res.results) return;
+
+      if (res.results.length === 0) {
+        resultsEl.innerHTML =
+          '<p class="px-2 py-6 text-center text-[var(--text-subtle)]">未找到相关文章</p>';
+        return;
+      }
+
+      const items = await Promise.all(res.results.slice(0, 8).map((item) => item.data()));
+      resultsEl.innerHTML = items
+        .map(
+          (item) => `
+          <a href="${escapeHtml(item.url)}" class="block rounded-lg px-3 py-2.5 transition hover:bg-[var(--bg-muted)]">
+            <div class="font-medium text-[var(--text)]">${escapeHtml(item.meta?.title || item.url)}</div>
+            <p class="mt-1 line-clamp-2 text-xs text-[var(--text-muted)]">${item.excerpt || ''}</p>
+          </a>
+        `,
+        )
+        .join('');
+    });
+  })();
+</script>

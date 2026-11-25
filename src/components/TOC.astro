@@ -1,0 +1,72 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+{
+  tocHeadings.length > 0 && (
+    <aside class="hidden xl:block">
+      <nav
+        aria-label="文章目录"
+        class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-4 text-xs"
+      >
+        <p class="mb-2.5 font-semibold uppercase tracking-wider text-[var(--text-subtle)]">
+          目录
+        </p>
+        <ul class="space-y-1.5">
+          {tocHeadings.map((heading) => (
+            <li class={heading.depth === 3 ? 'pl-3' : ''}>
+              <a
+                href={`#${heading.slug}`}
+                class="toc-link block truncate text-[var(--text-muted)] transition hover:text-[var(--accent)]"
+                data-slug={heading.slug}
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  )
+}
+
+<script is:inline>
+  (function () {
+    const links = Array.from(document.querySelectorAll('.toc-link'));
+    if (links.length === 0) return;
+
+    const targets = links
+      .map((link) => {
+        const slug = link.getAttribute('data-slug');
+        return slug ? document.getElementById(slug) : null;
+      })
+      .filter(Boolean);
+
+    if (targets.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            for (const link of links) {
+              const active = link.getAttribute('data-slug') === id;
+              link.classList.toggle('text-[var(--accent)]', active);
+              link.classList.toggle('font-medium', active);
+            }
+          }
+        }
+      },
+      { rootMargin: '-80px 0px -70% 0px' },
+    );
+
+    targets.forEach((el) => observer.observe(el));
+  })();
+</script>

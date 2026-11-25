@@ -1,0 +1,22 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Comments from '../components/Comments.astro';
+import { SITE } from '../config/site';
+
+const aboutEntry = await getEntry('pages', 'about');
+const rendered = aboutEntry ? await render(aboutEntry) : null;
+const Content = rendered?.Content;
+---
+
+<BaseLayout
+  title={`${aboutEntry?.data.title ?? '关于我'} | ${SITE.title}`}
+  description={aboutEntry?.data.description ?? SITE.description}
+>
+  <article class="prose max-w-none">
+    <h1>{aboutEntry?.data.title ?? '关于我'}</h1>
+    {Content ? <Content /> : <p>内容加载中，请在后台编辑 About 页面。</p>}
+  </article>
+
+  <Comments />
+</BaseLayout>
