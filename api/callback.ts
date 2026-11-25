@@ -25,20 +25,36 @@ function renderAuthScript(status: 'success' | 'error', payload: Record<string, u
     <title>GitHub 授权回调</title>
   </head>
   <body>
-    <p>${status === 'success' ? '授权成功，正在返回后台...' : '授权失败，请检查 OAuth 配置。'}</p>
+    <p id="status-msg">${status === 'success' ? '授权成功，正在返回后台...' : '授权失败，请检查 OAuth 配置。'}</p>
     <script>
       (function () {
         var payload = ${safeJson};
         var msg = ${JSON.stringify(messagePrefix)} + JSON.stringify(payload);
+        var targetOrigin = window.location.origin;
+
+        if (!window.opener) {
+          var el = document.getElementById('status-msg');
+          if (el) {
+            el.textContent = '未检测到后台父窗口（可能被浏览器弹窗拦截或隐私策略阻断），请关闭此页面并在原页面重试。';
+          }
+          return;
+        }
+
         function receiveMessage(e) {
-          window.opener.postMessage(msg, e.origin);
-          window.removeEventListener('message', receiveMessage, false);
+          if (e.source !== window.opener || e.origin !== targetOrigin) return;
+          if (e.data === 'authorizing:github') {
+            window.opener.postMessage(msg, targetOrigin);
+            window.removeEventListener('message', receiveMessage, false);
+          }
+        }
+
+        window.addEventListener('message', receiveMessage, false);
+        window.opener.postMessage(msg, targetOrigin);
+        window.opener.postMessage('authorizing:github', targetOrigin);
+
+        setTimeout(function () {
           window.close();
-        }
-        if (window.opener) {
-          window.addEventListener('message', receiveMessage, false);
-          window.opener.postMessage('authorizing:github', '*');
-        }
+        }, 1500);
       })();
     </script>
   </body>
